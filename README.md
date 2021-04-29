@@ -13,16 +13,25 @@
 フロントエンド側の開発で使用する Node.js をローカル開発環境にインストールしてください。  
 ※ v10.13 以上 最新の LTS バージョンのインストールをおすすめします
 
+```
+node -v
+
+v10.24.1 
+```
+↑ このように表示されたら、インストール済みです。
+
+
 【Node.jsダウンロードサイト】  
 https://nodejs.org/ja/download/
 
 ## Python
 Pythonのバージョン3.8以上がインストール済みでない場合、インストールしてください。  
 コマンドプロンプト、又はターミナルにて以下のコマンドを入力し、インストール済みか確認できます。
+
 ```
 python --version
 
-Python 3.8.3 ← このように表示されたら、インストール済みです。
+Python 3.8.3 #← このように表示されたら、インストール済みです。
 ```
 
 インストール済みでない場合、バックエンド側の開発で使用するPython（3.8以上）をローカル開発環境にインストールしてください。
@@ -30,6 +39,22 @@ Python 3.8.3 ← このように表示されたら、インストール済みで
 【Pythonインストール参考サイト】  
 Windows: https://www.python.jp/install/windows/install.html  
 Mac: https://www.python.jp/install/macos/index.html
+
+## Cloud9の場合
+
+2021-04-28時点では、pythonは3.7.9がインストールされているため、3.8を以下のコマンドでインストールしてください。
+
+```
+sudo amazon-linux-extras install -y python3.8
+(....中略)
+ec2-user:~/environment $ sudo ln -sf /usr/bin/python3.8 /usr/bin/python3                                                                                        
+ec2-user:~/environment $ python3 --version # バージョンの確認
+Python 3.8.5
+ec2-user:~/environment $ sudo ln -sf /usr/bin/pip3.8 /usr/bin/pip3
+ec2-user:~/environment $ pip --version # バージョンの確認
+pip 9.0.3 from /usr/lib/python3.8/site-packages (python 3.8)
+```
+
 
 ## AWS SAM
 本アプリケーションのデプロイには、AWS サーバーレスアプリケーションモデル(AWS SAM)を利用します。
