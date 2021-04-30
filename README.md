@@ -29,8 +29,7 @@ Pythonのバージョン3.8以上がインストール済みでない場合、�
 コマンドプロンプト、又はターミナルにて以下のコマンドを入力し、インストール済みか確認できます。
 
 ```
-python --version
-
+$ python --version
 Python 3.8.3 #← このように表示されたら、インストール済みです。
 ```
 
@@ -40,19 +39,29 @@ Python 3.8.3 #← このように表示されたら、インストール済み�
 Windows: https://www.python.jp/install/windows/install.html  
 Mac: https://www.python.jp/install/macos/index.html
 
-## Cloud9の場合
+### Cloud9の場合
 
-2021-04-28時点では、pythonは3.7.9がインストールされているため、3.8を以下のコマンドでインストールしてください。
+2021-04-28時点では、Pythonは3.7.9がインストールされているため、3.8を以下のコマンドでインストールしてください。
+
+Cloud9のディスクサイズが小さいと（標準は10Gなので要拡張）
 
 ```
 sudo amazon-linux-extras install -y python3.8
 (....中略)
-ec2-user:~/environment $ sudo ln -sf /usr/bin/python3.8 /usr/bin/python3                                                                                        
+ec2-user:~/environment $ sudo ln -sf /usr/bin/python3.8 /usr/bin/python3
 ec2-user:~/environment $ python3 --version # バージョンの確認
 Python 3.8.5
 ec2-user:~/environment $ sudo ln -sf /usr/bin/pip3.8 /usr/bin/pip3
 ec2-user:~/environment $ pip --version # バージョンの確認
 pip 9.0.3 from /usr/lib/python3.8/site-packages (python 3.8)
+```
+
+拡張方法
+
+``` 
+sudo growpart /dev/xvda 1
+sudo xfs_growfs -d /dev/xvda1
+df -h
 ```
 
 
@@ -62,6 +71,19 @@ pip 9.0.3 from /usr/lib/python3.8/site-packages (python 3.8)
 )を参考に、AWS アカウントの登録と設定、AWS SAM CLI と Docker のインストールを行ってください。  
 ※ SAM CLIの推奨バージョンは1.15.0以上  
 ※ Docker のインストールもローカルテストの有無に関わらず必要です。
+
+### Cloud9 の場合
+
+2021-04-30時点では双方ともインストールされており、操作する必要はありません。
+
+``` shell
+ec2-user:~/environment $ docker --version
+Docker version 20.10.4, build d3cb89e
+ec2-user:~/environment $ sam --version
+SAM CLI, version 1.19.0
+
+```
+
 
 ### 公式ドキュメントの参考箇所
 公式ドキュメントの以下の項目を完了させ、次の手順に進んでください。なお、既に導入済みのものは適宜飛ばして下さい。  
