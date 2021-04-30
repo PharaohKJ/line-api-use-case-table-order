@@ -4,16 +4,17 @@
 本アプリでは以下の LINE チャネルが必要となるので、手順に従って作成してください。
 
 1. MessagingAPI 用 LINE チャネル  
-・チャネル作成：https://developers.line.biz/ja/docs/clova-extensions-kit/create-messaging-api-channel-t4/  
-・Messaging APIについて：https://lineapiusecase.com/ja/api/msgapi.html  
+
+  - [チャネル作成](https://developers.line.biz/ja/docs/clova-extensions-kit/create-messaging-api-channel-t4/)
+  - [Messaging APIについて](https://lineapiusecase.com/ja/api/msgapi.html)
 
 1. LIFF 用 LINE チャネル  
-・チャネル作成：https://developers.line.biz/ja/docs/liff/registering-liff-apps/  
-・LIFFについて：https://lineapiusecase.com/ja/api/miniliff.html  
+  - [チャネル作成](https://developers.line.biz/ja/docs/liff/registering-liff-apps/)
+  - [LIFFについて](https://lineapiusecase.com/ja/api/miniliff.html)
 
-1. LINEPay 用 チャネル  
-・チャネル作成：https://pay.line.me/tw/developers/techsupport/sandbox/testflow?locale=ja_JP  
-・LINEPayについて：https://lineapiusecase.com/ja/api/pay.html  
+1. LINE Pay 用 チャネル  
+  - [チャネル作成](https://pay.line.me/tw/developers/techsupport/sandbox/testflow?locale=ja_JP)
+  - [LINEPayについて](https://lineapiusecase.com/ja/api/pay.html)
 
 ## 1.LINE アカウントの作成
 
@@ -47,7 +48,7 @@ LINE Developers は本アプリで必要な LINE 公式アカウントの作成�
 
 ## 4.チャネルの作成
 
-1. Messaging API 用のチャネルを作成
+### 4.1. Messaging API 用のチャネルを作成
    1. 先ほど作成したプロバイダーの画面にて、Messaging API を押下する
       ![チャネルの作成_Messaging APIの部分を資格で囲んだ画像](images/line-channel-create-1.png)
    1. 以下の通り、項目を設定する
@@ -67,7 +68,8 @@ LINE Developers は本アプリで必要な LINE 公式アカウントの作成�
    1. 以下画像のような作成したチャネルの画面が表示され、チャネルの作成が完了したことを確認する。
       ![チャネルの作成_2](images/line-channel-create-2.png)
       ※チャネル基本設定のタブに表示されているチャネル ID とチャネルシークレットを以降の手順にて使用するので、メモを取っておいてください。
-1. LIFF 用のチャネルを作成
+
+### 4.2. LIFF 用のチャネルを作成
    1. 先ほど作成したプロバイダーの画面にて、LINE ログインを押下する
       ![チャネルの作成_LINEログインの部分を四角で囲んだ画像](images/line-channel-create-3.png)
    1. 以下の通り、項目を設定する
@@ -87,10 +89,12 @@ LINE Developers は本アプリで必要な LINE 公式アカウントの作成�
    1. 以下画像のような作成したチャネルの画面が表示され、チャネルの作成が完了したことを確認する。
       ![チャネルの作成_4](images/line-channel-create-4.png)
       ※チャネル基本設定のタブに表示されているチャネル IDを以降の手順にて使用するので、メモを取っておいてください。
-1. 「リンクされたボット」の設定
+
+#### 4.3. 「リンクされたボット」の設定
    1. 先ほど作成したLIFFのチャネルのチャネル基本設定のタブにて、「リンクされたボット」項目の編集ボタンを押下する。
    1. プルダウンからMessagingAPIのチャネルを選択し、更新を行う。
-1. LIFF アプリの追加
+
+#### 4.4.  LIFF アプリの追加
    1. 先ほど作成した LIFF のチャネルにて、LIFF のタブに切り替え、追加ボタンを押下する
       ![チャネルの作成_LIFFの追加](images/line-channel-create-add-liff.png)
    1. 以下の通り、項目を設定する
@@ -109,7 +113,7 @@ LINE Developers は本アプリで必要な LINE 公式アカウントの作成�
       ![チャネルの作成_LIFFアプリの追加](images/line-channel-create-add-liff-app.png)
       ※LIFF ID を以降の手順にて使用するので、メモを取っておいてください。
 
-1. LINE Pay用のチャネルを作成  
+#### 4.5. LINE Pay用のチャネルを作成  
    ※こちらの手順ではSandboxを利用したデモ動作用のチャネルを作成します。実際のLINEPayによる課金は行われません。本番環境として利用する場合は、開発者が別途実装をお願い致します。  
    1. [LINE Pay Developers](https://pay.line.me/tw/developers/techsupport/sandbox/creation?locale=ja_JP)にアクセスする。
    1. Sandbox生成に以下の必要事項を入力し、Submitを押下。

@@ -1,5 +1,11 @@
 # バックエンドの構築手順
 
+## コードのclone
+
+``` shell
+git clone https://github.com/line/line-api-use-case-table-order.git
+```
+
 ## 周辺リソースのデプロイ
 
 本アプリでは以下の周辺リソースをデプロイする必要があります。
@@ -7,17 +13,17 @@
 1. 共通処理レイヤー(Layer)
 1. 定期実行バッチ(batch)
 
-### 1.共通処理レイヤー(Layer)
+### 1. 共通処理レイヤー(Layer)
 
 AWS Lambda では複数 Lambda 関数で共通化して利用したい処理をレイヤーとして記述することが出来ます。
 本アプリではレイヤーを利用しているので、はじめに以下の手順で、レイヤーをデプロイしてください。
 
-- template.yaml の修正  
-  backend-> Layer フォルダ内の template.yaml を開き、EnvironmentMap の dev の以下のパラメータ項目を修正する。
+####  template.yaml の修正  
+  backend-> Layer フォルダ内の template.yaml を開き、Mappings > EnvironmentMap > dev の以下のパラメータ項目を修正する。
 
   - `LayerName` 任意のレイヤー名
 
-- 以下コマンドの実行
+#### 以下コマンドの実行
 
 ```
 cd [backend -> Layerのフォルダ]
@@ -28,7 +34,7 @@ sam deploy --guided
     AWS Region : ap-northeast-1
     Parameter Environment: dev
     #Shows you resources changes to be deployed and require a 'Y' to initiate deploy Confirm changes before deploy [Y/n]: Y
-    #SAM needs permission to be able to create roles to connect to the resources in your template Allow SAM CLI IAM role creation[Y/n]: Y
+    #SAM needs permission to be able to create roles to co  nnect to the resources in your template Allow SAM CLI IAM role creation[Y/n]: Y
     Save arguments to samconfig.toml [Y/n]: Y
 
     SAM configuration file [samconfig.toml]: 入力せずEnter 
@@ -37,22 +43,24 @@ sam deploy --guided
     Deploy this changeset? [y/N]: y
 ```
 
-- レイヤーバージョンをメモ  
+#### レイヤーバージョンをメモ  
   デプロイ後、ターミナルの Outputs の項目に、レイヤー ARN とレイヤーバージョンが表示されるので、レイヤーバージョンをメモしておく。  
   レイヤーバージョンは末尾の数字。  
   ※バージョンはデプロイするたびに更新されるので、初めてのデプロイの場合バージョン 1 となっているのが正しいです。
   ![コマンドプロンプトのOutput部の画像](images/out-put-description.png)
 
-- 【確認】AWS マネジメントコンソールで Lambda のコンソールを開き、左タブから「レイヤー」を選択し、今回デプロイしたレイヤーがあることを確認する。
+#### レイヤーの確認
+【確認】AWS マネジメントコンソールで Lambda のコンソールを開き、左タブから「レイヤー」を選択し、今回デプロイしたレイヤーがあることを確認する。
 
-### 2.定期実行バッチ(batch)
+
+### 2. 定期実行バッチ(batch)
 本アプリで必要な短期チャネルアクセストークン更新バッチをデプロイします。
 短期チャネルアクセストークンは有効期限が取得後 30 日間なので、有効期限の前に短期チャネルアクセストークンを再取得してテーブル更新をするバッチを毎日定刻に動作させています。  
 定刻にバッチを動作させるために、Amazon EventBridge([公式ドキュメント](https://docs.aws.amazon.com/ja_jp/eventbridge/latest/userguide/what-is-amazon-eventbridge.html))を用いています。  
 以下の手順に従い、バッチのデプロイを行ってください。
 
-- template.yaml の修正  
-  backend-> batch フォルダ内の template.yaml を開き、EnvironmentMap の dev の以下のパラメータ項目を修正する。
+#### template.yaml の修正  
+  backend-> batch フォルダ内の template.yaml を開き、Mappings >  EnvironmentMap > dev の以下のパラメータ項目を修正する。
 
   - `LINEChannelAccessTokenDBName` 任意のテーブル名(短期チャネルアクセストークンを管理するテーブル)
   - `EventBridgeName` 任意のイベントブリッジ名  
@@ -62,14 +70,17 @@ sam deploy --guided
   - `LoggerLevel` INFO or Debug  
     例）INFO
 
-- 以下コマンドの実行
+#### 以下コマンドの実行
+
+(Cloud9の場合、ディスクの空き容量が足りなくてコマンドの実行に失敗します。 `docker rmi $(docker images -a -q)` を実行してレイヤー時のDocker Imageを削除し、空き容量を増やしてください)
 
 ```
 cd [backend -> batch]のtemplate.yamlが配置されたフォルダ]
+
 sam build --use-container
 sam deploy --guided
 ※プロファイル情報(default)以外を使用する場合は指定必要 sam deploy --guided --profile xxx
-    Stack Name : 任意のスタック名
+    Stack Name : 任意のスタック名(レイヤーと重複しない名前にしてください)
     AWS Region : ap-northeast-1
     Parameter Environment: dev
     #Shows you resources changes to be deployed and require a 'Y' to initiate deploy Confirm changes before deploy [Y/n]: Y
@@ -82,21 +93,34 @@ sam deploy --guided
     Deploy this changeset? [y/N]: y
 ```
 
-- テーブルにチャネル ID とチャネルシークレットを登録する
+#### テーブルにチャネル ID とチャネルシークレットを登録する
   - AWS マネジメントコンソールにログインし、DynamoDB のコンソールを開く
   - 先ほど作成した「短期チャネルアクセストークンを管理するテーブル」にて項目の作成を行い、【LINE チャネルの作成】で作成したMessaging APIのチャネルのチャネル ID とチャネルシークレットを以下の通り登録する。
     なお、チャネル ID とチャネルシークレットは[LINE Developers コンソール](https://developers.line.biz/console/)のチャネル基本設定にて確認可能。
     - channelId: チャネル ID (文字列)
     - channelSecret : チャネルシークレット(文字列)
-      ![チャネルアクセストークンの登録](images/channel-access-token-table-record.png)
-- チャネルアクセストークン更新の Lambda 関数を実行する
+
+```
+{
+  "channelId": "000000000",
+  "channelSecret": "0b000000e000dfcbd0b0000a00e0be0f"
+}
+```
+
+
+![チャネルアクセストークンの登録](images/channel-access-token-table-record.png)
+
+
+
+#### チャネルアクセストークン更新の Lambda 関数を実行する
   - AWS マネジメントコンソールにログインし、Lambda のコンソールを開く
   - 先ほど作成した Lambda 関数(関数名は TableOrder-PutAccessToken-{Enviromentで指定した値})を開く
   - Lambda 関数のコンソール右上、テストイベントの選択プルダウンにて「テストイベントの設定」を選択する
   - 以下のようなウィンドウが開いたら、イベント名を入力し、イベント内容を空にして作成ボタンを押下する。
     ![テストイベントの設定](images/test-event-set.png)
   - Lambda 関数のコンソール右上、テストボタンを押下してテスト実行を行う
-- 【確認】AWS マネジメントコンソールの DynamoDB コンソールにて、チャネルアクセストークンのテーブル開き、本アプリで利用する LINE チャネル ID のデータに channelAccessToken,limitDate,updatedTime の項目が追加されていることを確認する。
+  
+#### 【確認】AWS マネジメントコンソールの DynamoDB コンソールにて、チャネルアクセストークンのテーブル開き、本アプリで利用する LINE チャネル ID のデータに channelAccessToken,limitDate,updatedTime の項目が追加されていることを確認する。
 
 ## アプリのデプロイ(APP)
 
